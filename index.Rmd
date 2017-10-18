@@ -1,0 +1,17 @@
+---
+title:
+author: 
+date: 
+output:
+  html_document:
+    theme: yeti
+    toc: yes
+    toc_depth: 3
+    toc_float: yes
+  pdf_document:
+    toc: yes
+---
+#An exploration of happiness by income.  
+<br>
+
+![](./emoji.jpg)
