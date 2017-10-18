@@ -14,4 +14,11 @@ output:
 #An exploration of happiness by income.  
 <br>
 
-![](./emoji.jpg)
+![](./mr-robot.jpg)
+
+###Data
+```{r, data, warning=FALSE, message=FALSE}
+library(foreign)
+
+
+```
