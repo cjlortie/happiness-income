@@ -19,6 +19,7 @@ output:
 ###Data
 ```{r, data, warning=FALSE, message=FALSE}
 library(foreign)
-
+data = read.spss("data/Data540.sav", to.data.frame=TRUE)
+data
 
 ```
