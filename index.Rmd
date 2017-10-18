@@ -54,10 +54,20 @@ ggplot(likert.data, aes(INC1, HAPPY, color = GENDER1)) +
 
 ###Models
 ```{r, models, warning=FALSE, message=FALSE}
-m <- t.test(HAPPY ~ GENDER1, data = likert.data)
-m
-
 m <- wilcox.test(HAPPY ~ GENDER1, data = likert.data)
 m
+
+c <- cor.test(likert.data$HAPPY, likert.data$INC1, method = "kendall")
+
+likert.m <- likert.data %>% filter(GENDER1 == "Male")
+likert.f <- likert.data %>% filter(GENDER1 == "Female")
+
+cor.test(likert.m$HAPPY, likert.m$INC1, method = "kendall")
+cor.test(likert.f$HAPPY, likert.f$INC1, method = "kendall")
+
+require(MASS)
+m <- polr(as.factor(HAPPY) ~ INC1*GENDER1, Hess=TRUE, data = data)
+m
+
 
 ```

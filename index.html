@@ -258,19 +258,6 @@ likert.data &lt;- data %&gt;% mutate(HAPPY = case_when(.$HAPPY == &quot;Very unh
 </div>
 <div id="models" class="section level3">
 <h3>Models</h3>
-<pre class="r"><code>m &lt;- t.test(HAPPY ~ GENDER1, data = likert.data)
-m</code></pre>
-<pre><code>## 
-##  Welch Two Sample t-test
-## 
-## data:  HAPPY by GENDER1
-## t = -1.0678, df = 397.47, p-value = 0.2863
-## alternative hypothesis: true difference in means is not equal to 0
-## 95 percent confidence interval:
-##  -0.31252688  0.09252688
-## sample estimates:
-## mean in group Female   mean in group Male 
-##                 3.84                 3.95</code></pre>
 <pre class="r"><code>m &lt;- wilcox.test(HAPPY ~ GENDER1, data = likert.data)
 m</code></pre>
 <pre><code>## 
@@ -279,6 +266,50 @@ m</code></pre>
 ## data:  HAPPY by GENDER1
 ## W = 18770, p-value = 0.2633
 ## alternative hypothesis: true location shift is not equal to 0</code></pre>
+<pre class="r"><code>c &lt;- cor.test(likert.data$HAPPY, likert.data$INC1, method = &quot;kendall&quot;)
+
+likert.m &lt;- likert.data %&gt;% filter(GENDER1 == &quot;Male&quot;)
+likert.f &lt;- likert.data %&gt;% filter(GENDER1 == &quot;Female&quot;)
+
+cor.test(likert.m$HAPPY, likert.m$INC1, method = &quot;kendall&quot;)</code></pre>
+<pre><code>## 
+##  Kendall's rank correlation tau
+## 
+## data:  likert.m$HAPPY and likert.m$INC1
+## z = 1.4078, p-value = 0.1592
+## alternative hypothesis: true tau is not equal to 0
+## sample estimates:
+##        tau 
+## 0.07677131</code></pre>
+<pre class="r"><code>cor.test(likert.f$HAPPY, likert.f$INC1, method = &quot;kendall&quot;)</code></pre>
+<pre><code>## 
+##  Kendall's rank correlation tau
+## 
+## data:  likert.f$HAPPY and likert.f$INC1
+## z = 0.14192, p-value = 0.8871
+## alternative hypothesis: true tau is not equal to 0
+## sample estimates:
+##         tau 
+## 0.007700129</code></pre>
+<pre class="r"><code>require(MASS)
+m &lt;- polr(as.factor(HAPPY) ~ INC1*GENDER1, Hess=TRUE, data = data)
+m</code></pre>
+<pre><code>## Call:
+## polr(formula = as.factor(HAPPY) ~ INC1 * GENDER1, data = data, 
+##     Hess = TRUE)
+## 
+## Coefficients:
+##             INC1      GENDER1Male INC1:GENDER1Male 
+##     2.446937e-06    -1.940485e-01     1.190392e-06 
+## 
+## Intercepts:
+##             Happy|Mixed           Mixed|Unhappy      Unhappy|Very happy 
+##              -0.4789545               0.4523942               0.6223973 
+## Very happy|Very unhappy 
+##               3.2408234 
+## 
+## Residual Deviance: 1059.583 
+## AIC: 1073.583</code></pre>
 </div>
 </div>
 
