@@ -22,10 +22,11 @@ library(foreign)
 data = read.spss("data/Data540.sav", to.data.frame=TRUE)
 #data
 
+
 library(tidyverse)
 data <- read_csv("data/happiness.csv")
 #data
-
+likert.data <- data %>% mutate(HAPPY = case_when(.$HAPPY == "Very unhappy" ~ 1, .$HAPPY == "Unhappy" ~ 2, .$HAPPY == "Mixed" ~ 3, .$HAPPY == "Happy" ~ 4, .$HAPPY == "Very happy" ~ 5))
 
 ```
 
@@ -36,5 +37,27 @@ ggplot(data, aes(INC1, fill = HAPPY)) +
   facet_grid(~GENDER1) +
   labs(x = "primary income", y = "frequency", fill = "reported happiness")
 
+ggplot(likert.data, aes(HAPPY, fill = GENDER1)) +
+  geom_bar() + 
+  scale_fill_brewer(palette = "Greens") +
+  labs(x = "reported happiness (Likert scores)", y = "frequency", fill = "")
+  
+
+ggplot(likert.data, aes(INC1, HAPPY, color = GENDER1)) +
+  geom_point() +
+  geom_smooth(method = lm) +
+  labs(x = "primary income", y = "Likert Scores", color = "") + 
+  scale_color_brewer(palette = "Greens")
+
+
+```
+
+###Models
+```{r, models, warning=FALSE, message=FALSE}
+m <- t.test(HAPPY ~ GENDER1, data = likert.data)
+m
+
+m <- wilcox.test(HAPPY ~ GENDER1, data = likert.data)
+m
 
 ```
