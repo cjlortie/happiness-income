@@ -49,25 +49,60 @@ ggplot(likert.data, aes(INC1, HAPPY, color = GENDER1)) +
   labs(x = "primary income", y = "Likert Scores", color = "") + 
   scale_color_brewer(palette = "Greens")
 
+ggplot(likert.data, aes(INC1, AGE1, color = GENDER1)) +
+  geom_point() +
+  geom_smooth(method = lm) +
+  labs(x = "primary income", y = "age", color = "") + 
+  scale_color_brewer(palette = "Greens")
+
+ggplot(likert.data, aes(AGE1, HAPPY, color = GENDER1)) +
+  geom_point() +
+  geom_smooth(method = lm) +
+  labs(x = "age", y = "reported happiness", color = "") + 
+  scale_color_brewer(palette = "Greens")
+
+ggplot(likert.data, aes(HAPPY, fill = MSTAT)) +
+  geom_bar() + 
+  scale_fill_brewer(palette = "Greens") +
+  labs(x = "reported happiness", y = "frequency", fill = "") +
+  facet_wrap(~GENDER1)
 
 ```
 
 ###Models
 ```{r, models, warning=FALSE, message=FALSE}
+#differences between genders
 m <- wilcox.test(HAPPY ~ GENDER1, data = likert.data)
 m
 
-c <- cor.test(likert.data$HAPPY, likert.data$INC1, method = "kendall")
+#differences by marital status
+m <- wilcox.test(HAPPY ~ MSTAT, data = likert.data)
+m
 
+m <- glm(HAPPY ~ MSTAT*GENDER1, family = quasipoisson, data = likert.data)
+summary(m)
+
+#correlation between happiness and income for everyone
+c <- cor.test(likert.data$HAPPY, likert.data$INC1, method = "kendall")
+c
+
+#wrangle by gender
 likert.m <- likert.data %>% filter(GENDER1 == "Male")
 likert.f <- likert.data %>% filter(GENDER1 == "Female")
 
+#correlations for gender
 cor.test(likert.m$HAPPY, likert.m$INC1, method = "kendall")
 cor.test(likert.f$HAPPY, likert.f$INC1, method = "kendall")
 
-require(MASS)
-m <- polr(as.factor(HAPPY) ~ INC1*GENDER1, Hess=TRUE, data = data)
-m
+#correlations for age
+cor.test(likert.f$HAPPY, likert.f$AGE1, method = "kendall")
 
+cor.test(likert.f$INC1, likert.f$AGE1, method = "kendall")
 
 ```
+
+###Interpretations
+1. Primary income does not relate to happiness for men or women.  
+2. Primary income and age is positively correlated.  
+3. Increasing age is negatively correlated with decreasing reported happiness.  
+4. There is no difference in reported happiness between married and single people by gender.
